@@ -1,0 +1,26 @@
+module.exports = {
+  dark: {
+    bg: '#292929',
+    fg: '#ffffff',
+    'bg-surface': '#121212',
+    'fg-surface': '#121212',
+    'bg-primary': '#bb86fc',
+    'fg-primary': '#000000',
+    'bg-secondary': '#03dac5',
+    'fg-secondary': '#000000',
+    'bg-error': '#cf6679',
+    'fg-error': '#000000',
+  },
+  bright: {
+    bg: '#ffffff',
+    fg: '#000000',
+    'bg-surface': '#dddddd',
+    'fg-surface': '#dddddd',
+    'bg-primary': '#bb86fc',
+    'fg-primary': '#000000',
+    'bg-secondary': '#03dac5',
+    'fg-secondary': '#000000',
+    'bg-error': '#cf6679',
+    'fg-error': '#000000',
+  },
+}
