@@ -1,14 +1,14 @@
 COLOR_PIPE = 2>&1 | sed "s/.*/$$(printf '\033[31m&\033[0m')/"
-GO_DIRS = . backend utils
+GO_DIRS = backend utils
 
 .PHONY: build
 build:
 	jq ".version = \"$$(git describe 2>/dev/null || { echo -n '0.0.1-'; git rev-parse --short HEAD; })\"" < frontend/package.json > frontend/package.json.new
 	mv frontend/package.json.new frontend/package.json
-	npm run build | cat
-	cd backend; GOOS=linux GOARCH=amd64 make build
-	cd backend; GOOS=darwin GOARCH=amd64 make build
-	cd backend; GOOS=windows GOARCH=amd64 make build
+	cd frontend; npm run build | cat
+	cd backend; CGO_ENABLED=0 GOOS=linux GOARCH=amd64 make build
+	cd backend; CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 make build
+	cd backend; CGO_ENABLED=0 GOOS=windows GOARCH=amd64 make build
 
 .PHONY: readme
 readme:
@@ -16,7 +16,7 @@ readme:
 
 .PHONY: npmlint
 npmlint:
-	npm run lint
+	cd frontend; npm run lint
 
 .PHONY: godoc
 godoc:
@@ -25,12 +25,12 @@ godoc:
 .PHONY: gofmt
 gofmt:
 	@echo gofmt
-	@find $(GO_DIRS) -maxdepth 1 -type f -name '*.go' | xargs gofmt -s -e -d -w $(COLOR_PIPE)
+	@find $(GO_DIRS) -type f -name '*.go' | xargs gofmt -s -e -d -w $(COLOR_PIPE)
 
 .PHONY: govet
 govet:
 	@echo govet
-	@find $(GO_DIRS) -maxdepth 1 -type f -name '*.go' | xargs dirname | sort -u | xargs go vet $(COLOR_PIPE)
+	@find $(GO_DIRS) -type f -name '*.go' | xargs dirname | sort -u | xargs go vet $(COLOR_PIPE)
 
 .PHONY: golint
 golint:
@@ -40,7 +40,7 @@ golint:
 .PHONY: gocyclo
 gocyclo:
 	@echo gocyclo
-	@find $(GO_DIRS) -maxdepth 1 -type f -name '*.go' | xargs gocyclo -over 15 $(COLOR_PIPE)
+	@find $(GO_DIRS) -type f -name '*.go' | xargs gocyclo -over 15 $(COLOR_PIPE)
 
 .PHONY: gotest
 test:
